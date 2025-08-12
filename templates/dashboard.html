@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cast Your Vote</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <style>
+        .candidate {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .candidate img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid #4CAF50;
+        }
+        .candidate label {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Cast Your Vote</h2>
+        <form method="POST" action="{{ url_for('dashboard') }}">
+            {% for candidate in candidates %}
+                <div class="candidate">
+                    <input type="radio" id="candidate{{ candidate.id }}" name="candidate_id" value="{{ candidate.id }}" required />
+                   <label for="candidate{{ candidate.id }}">
+                      <img src="{{ url_for('static', filename='images/' + candidate.image) }}" alt="{{ candidate.name }}" width="150" height="150" />
+                      <strong>{{ candidate.name }} ({{ candidate.party }})</strong>
+                    </label>
+                 </div>
+            {% endfor %}
+
+            <input type="submit" value="Vote" />
+        </form>
+    </div>
+    <footer>&copy; 2025 E-Voting System</footer>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+
+    <h3>Manage Voters</h3>
+    <form method="POST" action="{{ url_for('add_voter') }}">
+      <input type="number" name="voterid" placeholder="Voter ID" required />
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <input type="submit" value="Add Voter" />
+    </form>
+    <table border="1" width="100%" style="margin-top: 10px;">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Voted</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for voter in voters %}
+          <tr>
+            <td>{{ voter.voterid }}</td>
+            <td>{{ voter.name }}</td>
+            <td>{{ 'Yes' if voter.voted else 'No' }}</td>
+            <td><a href="{{ url_for('remove_voter', voterid=voter.voterid) }}" onclick="return confirm('Remove voter?')">Remove</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Manage Candidates</h3>
+    <form method="POST" action="{{ url_for('add_candidate') }}">
+      <input type="number" name="id" placeholder="Candidate ID" required />
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="text" name="party" placeholder="Party" required />
+      <input type="text" name="image" placeholder="Image filename" required />
+      <input type="submit" value="Add Candidate" />
+    </form>
+    <table border="1" width="100%" style="margin-top: 10px;">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Party</th><th>Votes</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for candidate in candidates %}
+          <tr>
+            <td>{{ candidate.id }}</td>
+            <td>{{ candidate.name }}</td>
+            <td>{{ candidate.party }}</td>
+            <td>{{ candidate.votes }}</td>
+            <td><a href="{{ url_for('remove_candidate', id=candidate.id) }}" onclick="return confirm('Remove candidate?')">Remove</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Voting Results</h3>
+    <canvas id="resultChart" width="400" height="200"></canvas>
+
+    <p><a href="{{ url_for('adminlogout') }}">Logout</a></p>
+  </div>
+
+  <script>
+    async function fetchResults() {
+      const response = await fetch('{{ url_for("api_results") }}');
+      const data = await response.json();
+      return data;
+    }
+
+    async function renderChart() {
+      const data = await fetchResults();
+      const labels = data.map(item => item.name);
+      const votes = data.map(item => item.votes);
+
+      const ctx = document.getElementById('resultChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '# of Votes',
+            data: votes,
+            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true, precision: 0 } }
+        }
+      });
+    }
+    renderChart();
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>E-Voting System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to the E-Voting System</h2>
+        <p>Please choose your login:</p>
+        <ul style="list-style:none; padding-left:0;">
+            <li><a href="{{ url_for('login') }}">Voter Login</a></li>
+            <li><a href="{{ url_for('adminlogin') }}">Admin Login</a></li>
+        </ul>
+    </div>
+    <footer>&copy; 2025 E-Voting System</footer>
+</body>
+</html>

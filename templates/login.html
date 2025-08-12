@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - E-Voting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <h2>Voter Login</h2>
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endif %}
+        <form method="POST" action="{{ url_for('login') }}">
+            <label for="voterid">Voter ID:</label>
+            <input type="text" id="voterid" name="voterid" placeholder="Enter your Voter ID" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your Password" required />
+
+            <input type="submit" value="Login" />
+        </form>
+    </div>
+    <footer>&copy; 2025 E-Voting System</footer>
+</body>
+</html>
